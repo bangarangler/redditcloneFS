@@ -9,15 +9,24 @@ import express from "express";
 import { MikroORM } from "@mikro-orm/core";
 import { ApolloServer } from "apollo-server-express";
 import { buildSchema } from "type-graphql";
+// Resolvers
 import { HelloResolver } from "./resolvers/hello";
 import { PostResolver } from "./resolvers/post";
 import { UserResolver } from "./resolvers/user";
+// Constants
 import { COOKIE_NAME, __prod__ } from "./constants";
 import { MyContext } from "./types";
+// Generated / Utils
+// import { sendEmail } from "./utils/sendEmail";
+// Config
 import microConfig from "./mikro-orm.config";
+// Models
+// import { User } from "./entities/User";
 
 const main = async () => {
   const orm = await MikroORM.init(microConfig);
+  // delete all users in db for testing
+  // await orm.em.nativeDelete(User, {});
   await orm.getMigrator().up();
   const port = process.env.PORT || 4000;
 
