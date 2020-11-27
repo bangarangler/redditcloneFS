@@ -6,9 +6,9 @@ import session from "express-session";
 import connectRedis from "connect-redis";
 import Redis from "ioredis";
 import express from "express";
-import { MikroORM } from "@mikro-orm/core";
 import { ApolloServer } from "apollo-server-express";
 import { buildSchema } from "type-graphql";
+import { createConnection } from "typeorm";
 // Resolvers
 import { HelloResolver } from "./resolvers/hello";
 import { PostResolver } from "./resolvers/post";
@@ -19,15 +19,19 @@ import { MyContext } from "./types";
 // Generated / Utils
 // import { sendEmail } from "./utils/sendEmail";
 // Config
-import microConfig from "./mikro-orm.config";
-// Models
-// import { User } from "./entities/User";
+import { User } from "./entities/User";
+import { Post } from "./entities/Post";
 
 const main = async () => {
-  const orm = await MikroORM.init(microConfig);
-  // delete all users in db for testing
-  // await orm.em.nativeDelete(User, {});
-  await orm.getMigrator().up();
+  const conn = await createConnection({
+    type: "postgres",
+    database: "redditclone2",
+    username: process.env.POSTGRES_USER,
+    password: process.env.POSTGRES_PW,
+    logging: true,
+    synchronize: true,
+    entities: [Post, User],
+  });
   const port = process.env.PORT || 4000;
 
   const app = express();
@@ -63,7 +67,7 @@ const main = async () => {
       resolvers: [HelloResolver, PostResolver, UserResolver],
       validate: false,
     }),
-    context: ({ req, res }): MyContext => ({ em: orm.em, req, res, redis }),
+    context: ({ req, res }): MyContext => ({ req, res, redis }),
     playground: {
       settings: {
         "request.credentials": "include",
