@@ -32,10 +32,15 @@ const Login: FC<{}> = ({}) => {
           if (response.data?.login.errors) {
             setErrors(toErrorMap(response.data.login.errors));
           } else if (response.data?.login.user) {
-            // worked
-            router.push("/");
+            if (typeof router.query.next === "string") {
+              router.push(router.query.next);
+            } else {
+              // worked
+              router.push("/");
+            }
           }
-        }}>
+        }}
+      >
         {({ isSubmitting }) => (
           <Form>
             <InputField
@@ -60,7 +65,8 @@ const Login: FC<{}> = ({}) => {
               type="submit"
               colorScheme="teal"
               mt={4}
-              isLoading={isSubmitting}>
+              isLoading={isSubmitting}
+            >
               Login
             </Button>
           </Form>
