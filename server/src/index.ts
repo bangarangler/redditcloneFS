@@ -9,6 +9,7 @@ import express from "express";
 import { ApolloServer } from "apollo-server-express";
 import { buildSchema } from "type-graphql";
 import { createConnection } from "typeorm";
+import path from "path";
 // Resolvers
 import { HelloResolver } from "./resolvers/hello";
 import { PostResolver } from "./resolvers/post";
@@ -22,6 +23,7 @@ import { MyContext } from "./types";
 import { User } from "./entities/User";
 import { Post } from "./entities/Post";
 
+// rerun
 const main = async () => {
   const conn = await createConnection({
     type: "postgres",
@@ -30,8 +32,10 @@ const main = async () => {
     password: process.env.POSTGRES_PW,
     logging: true,
     synchronize: true,
+    migrations: [path.join(__dirname, "./migrations/*")],
     entities: [Post, User],
   });
+  await conn.runMigrations();
   const port = process.env.PORT || 4000;
 
   const app = express();
