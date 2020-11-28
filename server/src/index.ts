@@ -23,7 +23,6 @@ import { MyContext } from "./types";
 import { User } from "./entities/User";
 import { Post } from "./entities/Post";
 
-// rerun
 const main = async () => {
   const conn = await createConnection({
     type: "postgres",
@@ -36,6 +35,7 @@ const main = async () => {
     entities: [Post, User],
   });
   await conn.runMigrations();
+  // await Post.delete({});
   const port = process.env.PORT || 4000;
 
   const app = express();
