@@ -1,9 +1,9 @@
-import { Field, ObjectType } from "type-graphql";
+import { ObjectType } from "type-graphql";
 import {
   BaseEntity,
   Column,
   Entity,
-  ManyToMany,
+  // ManyToMany,
   ManyToOne,
   PrimaryColumn,
 } from "typeorm";
