@@ -4,7 +4,8 @@ import {
   Column,
   CreateDateColumn,
   Entity,
-  ManyToMany,
+  // ManyToMany,
+  ManyToOne,
   OneToMany,
   PrimaryGeneratedColumn,
 } from "typeorm";
@@ -23,7 +24,7 @@ export class Post extends BaseEntity {
   creatorId: number;
 
   @Field()
-  @ManyToMany(() => User, (user) => user.posts)
+  @ManyToOne(() => User, (user) => user.posts)
   creator: User;
 
   @OneToMany(() => Updoot, (updoot) => updoot.post)

@@ -10,6 +10,10 @@ console.log("hello there");
 
 const NavBar: FC<navBarProps> = ({}) => {
   const [{ fetching: logoutFetching }, logout] = useLogoutMutation();
+  // const [{ data, fetching }] = useMeQuery();
+  // don't feel like need to make this request server side
+  // no longer needed we are checking the cookie if you want ssr in this case
+  // don't mind fetching it
   const [{ data, fetching }] = useMeQuery({
     pause: isServer(),
   });
@@ -36,8 +40,7 @@ const NavBar: FC<navBarProps> = ({}) => {
           isLoading={logoutFetching}
           onClick={() => {
             logout();
-          }}
-        >
+          }}>
           Logout
         </Button>
       </Flex>
