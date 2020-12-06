@@ -44,8 +44,9 @@ const EditPost = ({}) => {
         initialValues={{ title: data.post.title, text: data.post.text }}
         onSubmit={async (values) => {
           await updatePost({ id: intId, ...values });
-          router.push("/");
-        }}>
+          router.back();
+        }}
+      >
         {({ isSubmitting }) => (
           <Form>
             <InputField name="title" placeholder="title" label="Title" />
@@ -61,7 +62,8 @@ const EditPost = ({}) => {
               mt={4}
               type="submit"
               isLoading={isSubmitting}
-              colorScheme="teal">
+              colorScheme="teal"
+            >
               Update Post
             </Button>
           </Form>
