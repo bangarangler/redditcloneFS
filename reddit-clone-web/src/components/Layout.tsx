@@ -1,4 +1,3 @@
-import { Wrap } from "@chakra-ui/react";
 import React, { FC } from "react";
 import NavBar from "./NavBar";
 import Wrapper, { WrapperVariant } from "./Wrapper";

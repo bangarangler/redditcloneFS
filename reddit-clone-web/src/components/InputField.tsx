@@ -20,7 +20,8 @@ const InputField: FC<InputFieldProps> = ({
   size: _,
   ...props
 }) => {
-  let InputOrTextarea = Input;
+  let InputOrTextarea: any = Input;
+  // let InputOrTextarea = Input;
   if (textarea) {
     InputOrTextarea = Textarea;
   }
