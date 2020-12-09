@@ -6,11 +6,11 @@ import {
 } from "formik";
 import { Box, Button } from "@chakra-ui/react";
 import { useRouter } from "next/router";
-import { withUrqlClient } from "next-urql";
+// import { withUrqlClient } from "next-urql";
 // Generated / Utils
 import { useRegisterMutation } from "../generated/graphql";
 import { toErrorMap } from "../utils/toErrorMap";
-import { createUrqlClient } from "../utils/createUrqlClient";
+// import { createUrqlClient } from "../utils/createUrqlClient";
 // Components
 import Wrapper from "../components/Wrapper";
 import InputField from "../components/InputField";
@@ -19,14 +19,14 @@ interface registerProps {}
 
 const Register: FC<registerProps> = ({}) => {
   const router = useRouter();
-  const [, register] = useRegisterMutation();
+  const [register] = useRegisterMutation();
   return (
     <Wrapper variant="small">
       <Formik
         initialValues={{ email: "", username: "", password: "" }}
         onSubmit={async (values, { setErrors }) => {
           console.log(values);
-          const response = await register({ options: values });
+          const response = await register({ variables: { options: values } });
           // console.log("response", response);
           if (response.data?.register.errors) {
             setErrors(toErrorMap(response.data.register.errors));
@@ -34,7 +34,8 @@ const Register: FC<registerProps> = ({}) => {
             // worked
             router.push("/");
           }
-        }}>
+        }}
+      >
         {({ isSubmitting }) => (
           <Form>
             <InputField
@@ -57,7 +58,8 @@ const Register: FC<registerProps> = ({}) => {
               type="submit"
               colorScheme="teal"
               mt={4}
-              isLoading={isSubmitting}>
+              isLoading={isSubmitting}
+            >
               Register
             </Button>
           </Form>
@@ -67,4 +69,5 @@ const Register: FC<registerProps> = ({}) => {
   );
 };
 
-export default withUrqlClient(createUrqlClient)(Register);
+// export default withUrqlClient(createUrqlClient)(Register);
+export default Register;

@@ -1,25 +1,26 @@
 import React, { FC, useState } from "react";
 import { Box, Button } from "@chakra-ui/react";
 import { Formik, Form } from "formik";
-import { withUrqlClient } from "next-urql";
+// import { withUrqlClient } from "next-urql";
 // Components
 import InputField from "../components/InputField";
 import Wrapper from "../components/Wrapper";
 // Generated / Util
-import { createUrqlClient } from "../utils/createUrqlClient";
+// import { createUrqlClient } from "../utils/createUrqlClient";
 import { useForgotPasswordMutation } from "../generated/graphql";
 
 const ForgotPassword: FC<{}> = ({}) => {
   const [complete, setComplete] = useState(false);
-  const [, forgotPassword] = useForgotPasswordMutation();
+  const [forgotPassword] = useForgotPasswordMutation();
   return (
     <Wrapper variant="small">
       <Formik
         initialValues={{ email: "" }}
         onSubmit={async (values) => {
-          await forgotPassword(values);
+          await forgotPassword({ variables: values });
           setComplete(true);
-        }}>
+        }}
+      >
         {({ isSubmitting }) =>
           complete ? (
             <Box>
@@ -37,7 +38,8 @@ const ForgotPassword: FC<{}> = ({}) => {
                 type="submit"
                 colorScheme="teal"
                 mt={4}
-                isLoading={isSubmitting}>
+                isLoading={isSubmitting}
+              >
                 Forgot Password
               </Button>
             </Form>
@@ -48,4 +50,5 @@ const ForgotPassword: FC<{}> = ({}) => {
   );
 };
 
-export default withUrqlClient(createUrqlClient)(ForgotPassword);
+// export default withUrqlClient(createUrqlClient)(ForgotPassword);
+export default ForgotPassword;

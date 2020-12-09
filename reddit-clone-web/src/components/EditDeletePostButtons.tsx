@@ -13,8 +13,8 @@ const EditDeletePostButtons: FC<EditDeletePostButtonsProps> = ({
   id,
   creatorId,
 }) => {
-  const [{ data: meData }] = useMeQuery();
-  const [, deletePost] = useDeletePostMutation();
+  const { data: meData } = useMeQuery();
+  const [deletePost] = useDeletePostMutation();
 
   if (meData?.me?.id !== creatorId) {
     return null;
@@ -34,7 +34,7 @@ const EditDeletePostButtons: FC<EditDeletePostButtonsProps> = ({
         // colorScheme="red"
         icon={<DeleteIcon />}
         aria-label="Delete Post"
-        onClick={() => deletePost({ id })}
+        onClick={() => deletePost({ variables: { id } })}
       />
     </Box>
   );

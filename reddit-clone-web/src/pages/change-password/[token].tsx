@@ -10,13 +10,13 @@ import Wrapper from "../../components/Wrapper";
 // Generated / Utils
 import { toErrorMap } from "../../utils/toErrorMap";
 import { useChangePasswordMutation } from "../../generated/graphql";
-import { withUrqlClient } from "next-urql";
-import { createUrqlClient } from "../../utils/createUrqlClient";
+// import { withUrqlClient } from "next-urql";
+// import { createUrqlClient } from "../../utils/createUrqlClient";
 
 // const ChangePassword: NextPage<{ token: string }> = ({ token }) => {
 const ChangePassword: NextPage = () => {
   const router = useRouter();
-  const [, changePassword] = useChangePasswordMutation();
+  const [changePassword] = useChangePasswordMutation();
   const [tokenError, setTokenError] = useState("");
   return (
     <Wrapper variant="small">
@@ -25,9 +25,13 @@ const ChangePassword: NextPage = () => {
         onSubmit={async (values, { setErrors }) => {
           console.log(values);
           const response = await changePassword({
-            newPassword: values.newPassword,
-            token:
-              typeof router.query.token === "string" ? router.query.token : "",
+            variables: {
+              newPassword: values.newPassword,
+              token:
+                typeof router.query.token === "string"
+                  ? router.query.token
+                  : "",
+            },
           });
           // console.log("response", response);
           if (response.data?.changePassword.errors) {
@@ -81,4 +85,5 @@ const ChangePassword: NextPage = () => {
 //   };
 // };
 
-export default withUrqlClient(createUrqlClient)(ChangePassword as any);
+// export default withUrqlClient(createUrqlClient)(ChangePassword as any);
+export default ChangePassword;

@@ -5,23 +5,25 @@ import { useRouter } from "next/router";
 // Generated / Utils
 import { useLogoutMutation, useMeQuery } from "../generated/graphql";
 import { isServer } from "../utils/isServer";
+import { useApolloClient } from "@apollo/client";
 
 interface navBarProps {}
 console.log("hello there");
 
 const NavBar: FC<navBarProps> = ({}) => {
   const router = useRouter();
-  const [{ fetching: logoutFetching }, logout] = useLogoutMutation();
+  const [logout, { loading: logoutFetching }] = useLogoutMutation();
+  const apolloClient = useApolloClient();
   // const [{ data, fetching }] = useMeQuery();
   // don't feel like need to make this request server side
   // no longer needed we are checking the cookie if you want ssr in this case
   // don't mind fetching it
-  const [{ data, fetching }] = useMeQuery({
-    pause: isServer(),
+  const { data, loading } = useMeQuery({
+    skip: isServer(),
   });
   let body = null;
 
-  if (fetching) {
+  if (loading) {
   } else if (!data?.me) {
     body = (
       <>
@@ -47,7 +49,8 @@ const NavBar: FC<navBarProps> = ({}) => {
           isLoading={logoutFetching}
           onClick={async () => {
             await logout();
-            router.reload();
+            await apolloClient.resetStore();
+            // router.reload();
           }}
         >
           Logout
