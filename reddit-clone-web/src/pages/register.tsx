@@ -6,6 +6,7 @@ import {
 } from "formik";
 import { Box, Button } from "@chakra-ui/react";
 import { useRouter } from "next/router";
+import { withApollo } from "../utils/withApollo";
 // import { withUrqlClient } from "next-urql";
 // Generated / Utils
 import { useRegisterMutation } from "../generated/graphql";
@@ -70,4 +71,5 @@ const Register: FC<registerProps> = ({}) => {
 };
 
 // export default withUrqlClient(createUrqlClient)(Register);
-export default Register;
+// export default Register;
+export default withApollo({ ssr: false })(Register);

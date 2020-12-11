@@ -10,6 +10,7 @@ import {
 } from "../../../generated/graphql";
 import { useGetIntId } from "../../../utils/useGetIntId";
 import { useRouter } from "next/router";
+import { withApollo } from "../../../utils/withApollo";
 
 const EditPost = ({}) => {
   const router = useRouter();
@@ -74,4 +75,5 @@ const EditPost = ({}) => {
 };
 
 // export default withUrqlClient(createUrqlClient)(EditPost);
-export default EditPost;
+// export default EditPost;
+export default withApollo({ ssr: false })(EditPost);

@@ -1,7 +1,8 @@
-import { useState } from "react";
+// import { useEffect } from "react";
 // import { withUrqlClient } from "next-urql";
 // import { createUrqlClient } from "../utils/createUrqlClient";
-import { PostsQuery, useMeQuery, usePostsQuery } from "../generated/graphql";
+import { withApollo } from "../utils/withApollo";
+import { useMeQuery, usePostsQuery } from "../generated/graphql";
 import {
   Link,
   Stack,
@@ -24,6 +25,7 @@ const Index = () => {
       limit: 15,
       cursor: null,
     },
+    notifyOnNetworkStatusChange: true,
   });
 
   if (!loading && !data) {
@@ -81,25 +83,25 @@ const Index = () => {
                   cursor:
                     data.posts.posts[data.posts.posts.length - 1].createdAt,
                 },
-                updateQuery: (
-                  previousValue,
-                  { fetchMoreResult }
-                ): PostsQuery => {
-                  if (!fetchMoreResult) {
-                    return previousValue as PostsQuery;
-                  }
-                  return {
-                    __typename: "Query",
-                    posts: {
-                      __typename: "PaginatedPosts",
-                      hasMore: (fetchMoreResult as PostsQuery).posts.hasMore,
-                      posts: [
-                        ...(previousValue as PostsQuery).posts.posts,
-                        ...(fetchMoreResult as PostsQuery).posts.posts,
-                      ],
-                    },
-                  };
-                },
+                // updateQuery: (
+                //   previousValue,
+                //   { fetchMoreResult }
+                // ): PostsQuery => {
+                //   if (!fetchMoreResult) {
+                //     return previousValue as PostsQuery;
+                //   }
+                //   return {
+                //     __typename: "Query",
+                //     posts: {
+                //       __typename: "PaginatedPosts",
+                //       hasMore: (fetchMoreResult as PostsQuery).posts.hasMore,
+                //       posts: [
+                //         ...(previousValue as PostsQuery).posts.posts,
+                //         ...(fetchMoreResult as PostsQuery).posts.posts,
+                //       ],
+                //     },
+                //   };
+                // },
               });
             }}
             isLoading={loading}
@@ -115,4 +117,5 @@ const Index = () => {
 };
 
 // export default withUrqlClient(createUrqlClient, { ssr: true })(Index);
-export default Index;
+// export default Index;
+export default withApollo({ ssr: true })(Index);

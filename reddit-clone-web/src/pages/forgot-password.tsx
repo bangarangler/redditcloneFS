@@ -8,6 +8,7 @@ import Wrapper from "../components/Wrapper";
 // Generated / Util
 // import { createUrqlClient } from "../utils/createUrqlClient";
 import { useForgotPasswordMutation } from "../generated/graphql";
+import { withApollo } from "../utils/withApollo";
 
 const ForgotPassword: FC<{}> = ({}) => {
   const [complete, setComplete] = useState(false);
@@ -51,4 +52,5 @@ const ForgotPassword: FC<{}> = ({}) => {
 };
 
 // export default withUrqlClient(createUrqlClient)(ForgotPassword);
-export default ForgotPassword;
+// export default ForgotPassword;
+export default withApollo({ ssr: false })(ForgotPassword);

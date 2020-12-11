@@ -1,4 +1,5 @@
 import React, { FC } from "react";
+import { withApollo } from "../utils/withApollo";
 import {
   Formik,
   Form,
@@ -77,4 +78,5 @@ const Login: FC<{}> = ({}) => {
 };
 
 // export default withUrqlClient(createUrqlClient)(Login);
-export default Login;
+// export default Login;
+export default withApollo({ ssr: false })(Login);
