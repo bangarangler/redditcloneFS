@@ -124,6 +124,7 @@ export class UserResolver {
   @Query(() => User, { nullable: true })
   me(@Ctx() { req }: MyContext) {
     // you are not logged in
+    console.log("session.userId", req.session);
     if (!req.session.userId) {
       return null;
     }
@@ -211,7 +212,9 @@ export class UserResolver {
     }
 
     req.session.userId = user.id;
+    console.log("adding user", req.session);
 
+    console.log("user", user);
     return { user };
   }
 

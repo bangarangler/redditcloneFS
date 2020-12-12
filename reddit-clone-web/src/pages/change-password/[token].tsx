@@ -9,7 +9,11 @@ import InputField from "../../components/InputField";
 import Wrapper from "../../components/Wrapper";
 // Generated / Utils
 import { toErrorMap } from "../../utils/toErrorMap";
-import { useChangePasswordMutation } from "../../generated/graphql";
+import {
+  MeDocument,
+  MeQuery,
+  useChangePasswordMutation,
+} from "../../generated/graphql";
 import { withApollo } from "../../utils/withApollo";
 // import { withUrqlClient } from "next-urql";
 // import { createUrqlClient } from "../../utils/createUrqlClient";
@@ -32,6 +36,15 @@ const ChangePassword: NextPage = () => {
                 typeof router.query.token === "string"
                   ? router.query.token
                   : "",
+            },
+            update: (cache, { data }) => {
+              cache.writeQuery<MeQuery>({
+                query: MeDocument,
+                data: {
+                  __typename: "Query",
+                  me: data?.changePassword.user,
+                },
+              });
             },
           });
           // console.log("response", response);

@@ -10,7 +10,7 @@ import { Box, Button, Flex, Link } from "@chakra-ui/react";
 import { useRouter } from "next/router";
 import NextLink from "next/link";
 // Generated / Utils
-import { useLoginMutation } from "../generated/graphql";
+import { MeDocument, MeQuery, useLoginMutation } from "../generated/graphql";
 import { toErrorMap } from "../utils/toErrorMap";
 // import { createUrqlClient } from "../utils/createUrqlClient";
 // Components
@@ -28,11 +28,24 @@ const Login: FC<{}> = ({}) => {
         initialValues={{ usernameOrEmail: "", password: "" }}
         onSubmit={async (values, { setErrors }) => {
           console.log(values);
-          const response = await login({ variables: values });
+          const response = await login({
+            variables: values,
+            update: (cache, { data }) => {
+              cache.writeQuery<MeQuery>({
+                query: MeDocument,
+                data: {
+                  __typename: "Query",
+                  me: data?.login?.user,
+                },
+              });
+              cache.evict({ fieldName: "posts:{}" });
+            },
+          });
           // console.log("response", response);
           if (response.data?.login.errors) {
             setErrors(toErrorMap(response.data.login.errors));
           } else if (response.data?.login.user) {
+            console.log(response.data.login.user);
             if (typeof router.query.next === "string") {
               router.push(router.query.next);
             } else {

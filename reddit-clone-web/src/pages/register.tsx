@@ -9,7 +9,7 @@ import { useRouter } from "next/router";
 import { withApollo } from "../utils/withApollo";
 // import { withUrqlClient } from "next-urql";
 // Generated / Utils
-import { useRegisterMutation } from "../generated/graphql";
+import { MeDocument, MeQuery, useRegisterMutation } from "../generated/graphql";
 import { toErrorMap } from "../utils/toErrorMap";
 // import { createUrqlClient } from "../utils/createUrqlClient";
 // Components
@@ -27,7 +27,18 @@ const Register: FC<registerProps> = ({}) => {
         initialValues={{ email: "", username: "", password: "" }}
         onSubmit={async (values, { setErrors }) => {
           console.log(values);
-          const response = await register({ variables: { options: values } });
+          const response = await register({
+            variables: { options: values },
+            update: (cache, { data }) => {
+              cache.writeQuery<MeQuery>({
+                query: MeDocument,
+                data: {
+                  __typename: "Query",
+                  me: data?.register?.user,
+                },
+              });
+            },
+          });
           // console.log("response", response);
           if (response.data?.register.errors) {
             setErrors(toErrorMap(response.data.register.errors));

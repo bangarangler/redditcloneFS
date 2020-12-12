@@ -17,6 +17,7 @@ const EditDeletePostButtons: FC<EditDeletePostButtonsProps> = ({
   const [deletePost] = useDeletePostMutation();
 
   if (meData?.me?.id !== creatorId) {
+    console.log(meData?.me?.id);
     return null;
   }
 
@@ -34,7 +35,15 @@ const EditDeletePostButtons: FC<EditDeletePostButtonsProps> = ({
         // colorScheme="red"
         icon={<DeleteIcon />}
         aria-label="Delete Post"
-        onClick={() => deletePost({ variables: { id } })}
+        onClick={() =>
+          deletePost({
+            variables: { id },
+            update: (cache) => {
+              // Post:78
+              cache.evict({ id: "Post:" + id });
+            },
+          })
+        }
       />
     </Box>
   );
